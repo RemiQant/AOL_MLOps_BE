@@ -2,10 +2,13 @@ import warnings
 
 import numpy as np
 import pandas as pd
+import torch
 from statsmodels.tsa.statespace.sarimax import SARIMAX
+from torch import nn
 
 from src.data import TARGET, load, split
 from src.evaluate import VAL_DAYS, validate
+from src.features import make_windows
 
 # (order, seasonal_order); s=7 is kept only so AIC can reject it (weekly means are flat)
 SARIMA_GRID = [
@@ -38,7 +41,37 @@ def sarima(series, start):
     return pred
 
 
-MODELS = {"naive": naive, "sarima": sarima}
+class _Net(nn.Module):
+    def __init__(self, hidden):
+        super().__init__()
+        self.lstm = nn.LSTM(1, hidden, batch_first=True)
+        self.out = nn.Linear(hidden, 1)
+
+    def forward(self, x):
+        return self.out(self.lstm(x.unsqueeze(-1))[0][:, -1]).squeeze(-1)
+
+
+def lstm(series, start, window=14, hidden=16, epochs=30, lr=1e-2, seed=0):
+    """Small LSTM on a sliding window. Scaler and training windows use series[:start] only."""
+    torch.manual_seed(seed)
+    train = series.iloc[:start]
+    scaled = (series - train.mean()) / train.std()
+    X, y = make_windows(scaled.values, window)
+    X, y = torch.from_numpy(X.copy()), torch.from_numpy(y)
+    n_train = start - window  # windows whose target day is < start
+    net = _Net(hidden)
+    opt = torch.optim.Adam(net.parameters(), lr=lr)
+    for _ in range(epochs):
+        for idx in torch.randperm(n_train).split(64):
+            opt.zero_grad()
+            nn.functional.mse_loss(net(X[idx]), y[idx]).backward()
+            opt.step()
+    with torch.no_grad():
+        pred = net(X[n_train:]).numpy()
+    return pd.Series(pred * train.std() + train.mean(), index=series.index[start:])
+
+
+MODELS = {"naive": naive, "sarima": sarima, "lstm": lstm}
 
 
 def run(df, days=VAL_DAYS):

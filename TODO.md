@@ -9,7 +9,7 @@ Each checkpoint ends with a summary, the files changed, the real test results, a
   - [x] Predictions for day *t* use only data ≤ *t*-1 (a test changes the future and asserts earlier predictions are unchanged).
   - [x] Walk-forward validation gives MAE/RMSE for naive and SARIMA over the same 90 days.
   - [x] Metric unit tests pass.
-- [ ] **3. LSTM.** It trains with a fixed seed, the scaler is fit on training data only, it is scored on the same validation days, and output shapes are tested.
+- [x] **3. LSTM.** It trains with a fixed seed, the scaler is fit on training data only, it is scored on the same validation days, and output shapes are tested.
 - [ ] **4. MLflow.** Runs log all fields listed in `system-design.md` §4. The promotion rule is tested: a worse candidate leaves `artifacts/champion/` unchanged. `champion.json` identifies the version.
 - [ ] **5. Monitoring.** The holdout is evaluated in both modes and reported apart from validation. `monitor.py` outputs the drift flag, KS statistic, p-value and mean shift. Tests cover a no-drift case, a shifted case, and a short window.
 - [ ] **6. Website.** Three sections, with every number read from `artifacts/` or the dataset. The small-sample warning is shown. An `AppTest` smoke test passes.
