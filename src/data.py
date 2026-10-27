@@ -2,9 +2,10 @@ import pandas as pd
 
 TARGET = "pm2_5"
 HOLDOUT_DAYS = 7
+DATA_PATH = "dataset/air_quality_historical.csv"
 
 
-def load(path="dataset/air_quality_historical.csv"):
+def load(path=DATA_PATH):
     df = pd.read_csv(path, parse_dates=["date"])
     if TARGET not in df.columns:
         raise ValueError(f"missing column {TARGET}")

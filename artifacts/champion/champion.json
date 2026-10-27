@@ -1,0 +1,43 @@
+{
+  "dataset_sha256": "62850bc152109d73a003c8ad22ee9b2bf303f5bce140c42743554e1a1f15fc3e",
+  "git_commit": "af8e6ee3e8ca2e3813728d709e91e2fe4d70d91d",
+  "horizon_days": 1,
+  "train_period": [
+    "2022-08-04",
+    "2025-11-13"
+  ],
+  "validation_period": [
+    "2025-11-14",
+    "2026-02-11"
+  ],
+  "holdout_period": [
+    "2026-02-12",
+    "2026-02-18"
+  ],
+  "forecast_trained_through": "2026-02-18",
+  "model": "sarima",
+  "params": {
+    "order": "((1, 1, 1), (0, 0, 0, 0))"
+  },
+  "version": "70b935d6585e407fac68ac697386da32",
+  "forecast_date": "2026-02-19",
+  "forecast": 54.411058170922665,
+  "validation_metrics": {
+    "MAE": 12.043983001370659,
+    "RMSE": 15.207453446659956
+  },
+  "all_validation_metrics": {
+    "naive": {
+      "MAE": 11.98111111111111,
+      "RMSE": 16.049346285867962
+    },
+    "sarima": {
+      "MAE": 12.043983001370659,
+      "RMSE": 15.207453446659956
+    },
+    "lstm": {
+      "MAE": 11.659866046810963,
+      "RMSE": 15.247935487105531
+    }
+  }
+}

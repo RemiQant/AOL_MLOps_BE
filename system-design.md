@@ -48,7 +48,7 @@ The champion is the model with the lowest validation RMSE.
 
 ## 4. MLflow and promotion
 
-- Local file tracking (`mlruns/`, git-ignored). Each run logs: model type, params, dataset sha256, train/val/holdout periods, metrics, git commit, and the model artifact.
+- Local SQLite tracking (`mlruns/mlflow.db`, git-ignored). MLflow 3.17 refuses the file store. Each run logs: model type, params, dataset sha256, train/val/holdout periods, metrics, git commit, and a `model.json` artifact. That artifact is a recipe, not a weights file: params, periods and the next-day forecast. Training is deterministic (fixed seed) and takes seconds, so the recipe reproduces the model.
 - The MLflow registry on a file store is deprecated in recent versions, so versions are identified by **run ID + a `champion.json`** (run ID, model type, dataset hash, git commit, metrics). Revisit if the deploy target supports a DB-backed registry.
 - Promotion rule: a candidate replaces the active model only if tests pass **and** validation RMSE < naive validation RMSE. Otherwise `artifacts/champion/` is not touched.
 - `artifacts/champion/` (model + `champion.json` + `metrics.json` + `drift.json`) is small and **is committed**, so the deployed app has real pipeline outputs without retraining at startup.
