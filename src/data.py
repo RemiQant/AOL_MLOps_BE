@@ -1,3 +1,6 @@
+import hashlib
+from pathlib import Path
+
 import pandas as pd
 
 TARGET = "pm2_5"
@@ -16,6 +19,11 @@ def load(path=DATA_PATH):
     if (df.index.to_series().diff().dropna() != pd.Timedelta(days=1)).any():
         raise ValueError("dates are not contiguous daily")
     return df.asfreq("D").ffill()  # ffill uses past values only, so no leakage
+
+
+def dataset_hash(path=DATA_PATH):
+    """SHA-256 of the file with CRLF folded to LF, so Windows and Linux checkouts agree."""
+    return hashlib.sha256(Path(path).read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
 def split(df, holdout=HOLDOUT_DAYS):

@@ -1,7 +1,7 @@
 {
   "champion": {
     "model": "sarima",
-    "version": "70b935d6585e407fac68ac697386da32"
+    "version": "82f5b99386884240b96fdf513f239bb0"
   },
   "reference_period": [
     "2022-08-04",

@@ -63,9 +63,9 @@ The champion is the model with the lowest validation RMSE.
 
 ## 6. App and deploy
 
-- Streamlit only, with three sections (Forecast, Model Performance, MLOps Monitoring), all read from `artifacts/champion/` and the dataset.
-- Deploy: Streamlit Community Cloud from `main`, with the CI workflow required to pass. No Docker unless the host needs it.
-- Smoke test: `streamlit.testing.v1.AppTest` in pytest, plus an HTTP check of the deployed URL.
+- **Backend only (scope change after checkpoint 6):** there is no UI in this repo. A small read-only FastAPI (`src/api.py`) serves the same three views as JSON: forecast, model performance, and monitoring. It reads `artifacts/champion/*.json` and the dataset on each request and never retrains. CORS is open by default so a separate frontend can call it. The earlier Streamlit dashboard was removed.
+- Deploy: a Docker image with only the API, the dataset and the artifacts. The host is not chosen yet. Any Dockerfile-based host works, gated by the CI `test` and `container` jobs through branch protection.
+- Smoke tests: pytest with `TestClient`, a CI job that builds and calls the container, and an optional post-deploy check of `APP_URL`.
 
 ## 7. Layout (extends the existing repo)
 
@@ -73,16 +73,16 @@ The champion is the model with the lowest validation RMSE.
 dataset/            existing, committed (small)
 eda.ipynb           existing, untouched
 src/{data,features,evaluate,train,predict,monitor}.py
-app/streamlit_app.py
+src/api.py
 tests/
 artifacts/champion/
 .github/workflows/ci.yml
-requirements.txt  TODO.md  system-design.md  README.md (extended later)
+Dockerfile  requirements.txt  requirements-api.txt  TODO.md  system-design.md  README.md
 ```
 
 `src/` modules are added only when the checkpoint needs them. Models are added to `train.py` rather than split across files.
 
 ## 8. Environment
 
-- Python 3.13.9 (Anaconda) already has pandas 2.3.3, numpy, scipy, statsmodels 0.14.5, torch 2.12.1, streamlit 1.51.0, pytest 8.4.2.
+- Python 3.13.9 (Anaconda) already has pandas 2.3.3, numpy, scipy, statsmodels 0.14.5, torch 2.12.1, pytest 8.4.2. The project uses its own `.venv` from `requirements.txt` (which adds mlflow and fastapi). `requirements-api.txt` is the smaller serving set used by the Docker image.
 - **Missing: `mlflow`.** It is needed from checkpoint 4. The default `python` on PATH is 3.7 and cannot run the project, so use the Anaconda interpreter or a new venv.

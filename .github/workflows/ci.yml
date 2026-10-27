@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      # CPU-only torch wheel: the default Linux wheel pulls in gigabytes of CUDA libraries
+      - run: pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
+      - run: python -m pytest -q tests
+
+  # Deployment check: the image builds, starts, and every endpoint answers from the committed artifacts
+  container:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t pm25-api .
+      - run: docker run -d --name api -p 8000:8000 pm25-api
+      - name: Smoke test
+        run: |
+          for i in $(seq 1 30); do curl -fsS localhost:8000/health && break; sleep 1; done
+          for p in health model forecast history performance monitoring; do
+            curl -fsS "localhost:8000/$p" > /dev/null || { docker logs api; exit 1; }
+          done
+
+  # Set the repository variable APP_URL (Settings > Secrets and variables > Actions > Variables) once the
+  # image is deployed somewhere; the hosting platform redeploys from main on its own.
+  live:
+    needs: container
+    if: github.event_name == 'push' && vars.APP_URL != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for the deployed API to serve the forecast
+        run: |
+          for i in $(seq 1 20); do
+            if curl -fsS "${{ vars.APP_URL }}/forecast"; then exit 0; fi
+            sleep 15
+          done
+          echo "Deployed API did not become healthy within 5 minutes" >&2
+          exit 1

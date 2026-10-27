@@ -1,4 +1,3 @@
-import hashlib
 import json
 import subprocess
 import sys
@@ -12,7 +11,7 @@ import torch
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 from torch import nn
 
-from src.data import DATA_PATH, TARGET, load, split
+from src.data import DATA_PATH, TARGET, dataset_hash, load, split
 from src.evaluate import VAL_DAYS, validate
 from src.features import make_windows
 
@@ -120,7 +119,7 @@ def main(path=DATA_PATH, out=Path("artifacts/champion"), mlruns=Path("mlruns"), 
     trainval, holdout = split(df)
     scores = run(df, days)
     meta = {
-        "dataset_sha256": hashlib.sha256(Path(path).read_bytes()).hexdigest(),
+        "dataset_sha256": dataset_hash(path),
         "git_commit": _git_commit(),
         "horizon_days": 1,
         "train_period": [str(trainval.index[0].date()), str(trainval.index[-days - 1].date())],
@@ -158,5 +157,6 @@ def main(path=DATA_PATH, out=Path("artifacts/champion"), mlruns=Path("mlruns"), 
 
 
 if __name__ == "__main__":
-    ok = subprocess.run([sys.executable, "-m", "pytest", "-q", "tests"]).returncode == 0
+    # test_artifacts checks the outputs of this very script, so it can't gate its own promotion
+    ok = subprocess.run([sys.executable, "-m", "pytest", "-q", "tests", "--ignore=tests/test_artifacts.py"]).returncode == 0
     sys.exit(0 if main(tests_ok=ok) else 1)

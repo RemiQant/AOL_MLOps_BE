@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from src.data import TARGET, load, split
+from src.data import TARGET, dataset_hash, load, split
 
 
 def write(tmp_path, rows):
@@ -49,6 +49,14 @@ def test_split_is_chronological_and_disjoint():
     assert holdout.equals(df.tail(7))
     assert trainval.index.max() < holdout.index.min()
     assert len(trainval) + len(holdout) == len(df)
+
+
+def test_dataset_hash_ignores_line_endings(tmp_path):
+    lf, crlf, other = tmp_path / "a.csv", tmp_path / "b.csv", tmp_path / "c.csv"
+    lf.write_bytes(b"date,x\n2024-01-01,1\n")
+    crlf.write_bytes(b"date,x\r\n2024-01-01,1\r\n")
+    other.write_bytes(b"date,x\n2024-01-01,2\n")
+    assert dataset_hash(lf) == dataset_hash(crlf) != dataset_hash(other)
 
 
 def test_real_dataset_loads():
