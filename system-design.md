@@ -56,8 +56,9 @@ The champion is the model with the lowest validation RMSE.
 ## 5. Monitoring (offline)
 
 - Reference = `trainval`. Current = holdout (7 rows).
-- Feature drift (pm2_5 and the lagged-feature inputs): two-sample KS test (`scipy.stats.ks_2samp`), plus mean shift in reference standard deviations. The flag is raised if KS p < 0.05 **and** |shift| > 0.5σ. The two-part rule is there because with n=7 the KS test alone has little power and is noisy.
-- Performance: holdout MAE/RMSE against validation MAE/RMSE, shown separately from drift. Drift means the inputs moved. Degradation means errors rose. They can occur independently.
+- Monitored column: `pm2_5` only. The models are univariate, so their one input (lagged PM2.5) is also the target. Other pollutants are not model inputs, so they are not monitored.
+- Drift test: two-sample KS test (`scipy.stats.ks_2samp`), plus mean shift in reference standard deviations. The flag is raised if KS p < 0.05 **and** |shift| > 0.5σ. The two-part rule is there because with n=7 the KS test alone has little power and is noisy.
+- Performance: champion holdout RMSE (rolling one-step) against its validation RMSE, flagged as degraded above a ratio of 1.5, shown separately from drift. Drift means the inputs moved. Degradation means errors rose. They can occur independently.
 - Evidently is not used. It adds a heavy dependency for one KS test. `monitor.py` takes any current window, so a longer rolling window works without changes.
 
 ## 6. App and deploy

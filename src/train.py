@@ -27,7 +27,7 @@ SARIMA_GRID = [
 
 
 def naive(series, start):
-    return series.shift(1).iloc[start:]
+    return series.ffill().shift(1).iloc[start:]  # NaN actuals (unknown future) repeat the last value
 
 
 def sarima(series, start):
@@ -64,19 +64,23 @@ def lstm(series, start, window=14, hidden=16, epochs=30, lr=1e-2, seed=0):
     torch.manual_seed(seed)
     train = series.iloc[:start]
     scaled = (series - train.mean()) / train.std()
-    X, y = make_windows(scaled.values, window)
+    arr = scaled.values.astype("float32")
+    X, y = make_windows(arr[:start], window)
     X, y = torch.from_numpy(X.copy()), torch.from_numpy(y)
-    n_train = start - window  # windows whose target day is < start
     net = _Net(hidden)
     opt = torch.optim.Adam(net.parameters(), lr=lr)
     for _ in range(epochs):
-        for idx in torch.randperm(n_train).split(64):
+        for idx in torch.randperm(len(y)).split(64):
             opt.zero_grad()
             nn.functional.mse_loss(net(X[idx]), y[idx]).backward()
             opt.step()
+    pred = []
     with torch.no_grad():
-        pred = net(X[n_train:]).numpy()
-    out = pd.Series(pred * train.std() + train.mean(), index=series.index[start:])
+        for t in range(start, len(arr)):
+            pred.append(net(torch.from_numpy(arr[t - window : t][None])).item())
+            if np.isnan(arr[t]):
+                arr[t] = pred[-1]  # unknown actual: feed the forecast back in (multi-step)
+    out = pd.Series(np.array(pred) * train.std() + train.mean(), index=series.index[start:])
     out.attrs = dict(window=window, hidden=hidden, epochs=epochs, lr=lr, seed=seed)
     return out
 
