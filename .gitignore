@@ -1,0 +1,9 @@
+mlops_venv/
+__pycache__/
+.ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache/
+.env
+mlruns/
+mlflow.db
+models/
