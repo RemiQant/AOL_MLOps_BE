@@ -1,0 +1,17 @@
+{
+  "os":  "Windows-10-10.0.26200-SP0",
+  "python":  "CPython 3.11.9",
+  "startedAt":  "2026-11-18T08:20:50.976995Z",
+  "program":  "c:\\Users\\leona\\OneDrive\\Documents\\Kuliah 2025-2029\\aol-mlops\\notebooks\\main.ipynb",
+  "codePath":  "c:\\Users\\leona\\OneDrive\\Documents\\Kuliah 2025-2029\\aol-mlops\\notebooks\\main.ipynb",
+  "codePathLocal":  "main.ipynb",
+  "git":  {
+    "remote":  "https://github.com/RemiQant/AOL_MLOps_BE.git",
+    "commit":  "9c6c8a3a04994a19face9d810ee9788826d850f7"
+  },
+  "email":  "alvingunawansutanto@gmail.com",
+  "root":  "c:\\Users\\leona\\OneDrive\\Documents\\Kuliah 2025-2029\\aol-mlops\\notebooks",
+  "host":  "Alvin-Laptop",
+  "executable":  "c:\\Users\\leona\\OneDrive\\Documents\\Kuliah 2025-2029\\aol-mlops\\mlops_venv\\Scripts\\python.exe",
+  "writerId":  "01a1edbe-8eaf-7b5a-8167-4e4653d4c815"
+}
