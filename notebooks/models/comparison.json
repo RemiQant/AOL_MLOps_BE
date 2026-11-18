@@ -1,0 +1,22 @@
+{
+  "LightGBM + Optuna":{
+    "mae":11.659,
+    "rmse":15.118,
+    "spearman_us_aqi":0.933
+  },
+  "TFT":{
+    "mae":11.883,
+    "rmse":15.526,
+    "spearman_us_aqi":0.927
+  },
+  "LSTM":{
+    "mae":12.264,
+    "rmse":15.381,
+    "spearman_us_aqi":0.916
+  },
+  "Baseline":{
+    "mae":12.332,
+    "rmse":16.551,
+    "spearman_us_aqi":0.924
+  }
+}
