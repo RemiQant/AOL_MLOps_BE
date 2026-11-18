@@ -1,0 +1,29 @@
+2026-11-18 15:15:47,932 INFO    MainThread:33460 [wandb_setup.py:_flush():81] Current SDK version is 0.31.0
+2026-11-18 15:15:47,932 INFO    MainThread:33460 [wandb_setup.py:_flush():81] Configure stats pid to 33460
+2026-11-18 15:15:47,932 INFO    MainThread:33460 [wandb_setup.py:_flush():81] Loading settings from environment variables
+2026-11-18 15:15:47,932 INFO    MainThread:33460 [wandb_init.py:setup_run_log_directory():740] Logging user logs to c:\Users\leona\OneDrive\Documents\Kuliah 2025-2029\aol-mlops\notebooks\wandb\run-20261118_151547-f0uxc784\logs\debug.log
+2026-11-18 15:15:47,932 INFO    MainThread:33460 [wandb_init.py:setup_run_log_directory():741] Logging internal logs to c:\Users\leona\OneDrive\Documents\Kuliah 2025-2029\aol-mlops\notebooks\wandb\run-20261118_151547-f0uxc784\logs\debug-internal.log
+2026-11-18 15:15:47,932 INFO    MainThread:33460 [wandb_init.py:monkeypatch_ipython():659] configuring jupyter hooks <wandb.sdk.wandb_init._WandbInit object at 0x000001CFB79F3B90>
+2026-11-18 15:15:47,932 INFO    MainThread:33460 [wandb_init.py:init():784] calling init triggers
+2026-11-18 15:15:47,932 INFO    MainThread:33460 [wandb_init.py:init():789] wandb.init called with sweep_config: {}
+config: {'test_days': 180, 'lags': '[1, 2, 3, 7, 14]', 'model': 'lightgbm', 'n_estimators': 112, 'learning_rate': 0.013125824349461166, 'num_leaves': 62, 'min_child_samples': 31, 'subsample': 0.7101408003889501, 'colsample_bytree': 0.769024346402402, '_wandb': {}}
+2026-11-18 15:15:47,932 INFO    MainThread:33460 [wandb_init.py:init():832] starting backend
+2026-11-18 15:15:47,932 INFO    MainThread:33460 [wandb_init.py:init():847] sending inform_init request
+2026-11-18 15:15:47,939 INFO    MainThread:33460 [wandb_init.py:init():852] backend started and connected
+2026-11-18 15:15:47,943 INFO    MainThread:33460 [wandb_run.py:_label_probe_notebook():1210] probe notebook
+2026-11-18 15:15:47,946 INFO    MainThread:33460 [wandb_init.py:init():922] updated telemetry
+2026-11-18 15:15:48,052 INFO    MainThread:33460 [wandb_init.py:init():940] communicating run to backend with 90.0 second timeout
+2026-11-18 15:15:48,882 INFO    MainThread:33460 [wandb_init.py:init():977] starting run threads in backend
+2026-11-18 15:15:49,201 INFO    MainThread:33460 [wandb_run.py:_console_start():2528] atexit reg
+2026-11-18 15:15:49,201 INFO    MainThread:33460 [wandb_run.py:_redirect():2378] redirect: wrap_raw
+2026-11-18 15:15:49,201 INFO    MainThread:33460 [wandb_run.py:_redirect():2447] Wrapping output streams.
+2026-11-18 15:15:49,201 INFO    MainThread:33460 [wandb_run.py:_redirect():2470] Redirects installed.
+2026-11-18 15:15:49,206 INFO    MainThread:33460 [wandb_init.py:init():1015] run started, returning control to user process
+2026-11-18 15:15:49,279 INFO    MainThread:33460 [wandb_run.py:_finish():2300] finishing run alvingunawansutanto-binus-university/pm25-jakarta/f0uxc784
+2026-11-18 15:15:49,433 INFO    MainThread:33460 [jupyter.py:save_history():441] not saving jupyter history
+2026-11-18 15:15:49,433 INFO    MainThread:33460 [jupyter.py:save_ipynb():368] not saving jupyter notebook
+2026-11-18 15:15:49,433 INFO    MainThread:33460 [wandb_init.py:_jupyter_teardown():638] cleaning up jupyter logic
+2026-11-18 15:15:49,433 INFO    MainThread:33460 [wandb_run.py:_atexit_cleanup():2495] got exitcode: 0
+2026-11-18 15:15:49,433 INFO    MainThread:33460 [wandb_run.py:_restore():2477] restore
+2026-11-18 15:15:49,433 INFO    MainThread:33460 [wandb_run.py:_restore():2483] restore done
+2026-11-18 15:15:53,076 INFO    MainThread:33460 [wandb_run.py:_footer_sync_info():3908] logging synced files

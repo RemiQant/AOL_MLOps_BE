@@ -1,0 +1,44 @@
+{
+  "os":  "Windows-10-10.0.26200-SP0",
+  "python":  "CPython 3.11.9",
+  "startedAt":  "2026-11-18T08:15:47.923521Z",
+  "program":  "c:\\Users\\leona\\OneDrive\\Documents\\Kuliah 2025-2029\\aol-mlops\\notebooks\\main.ipynb",
+  "codePath":  "c:\\Users\\leona\\OneDrive\\Documents\\Kuliah 2025-2029\\aol-mlops\\notebooks\\main.ipynb",
+  "codePathLocal":  "main.ipynb",
+  "git":  {
+    "remote":  "https://github.com/RemiQant/AOL_MLOps_BE.git",
+    "commit":  "da57ac015089a444487f83c8b984934e8fa40841"
+  },
+  "email":  "alvingunawansutanto@gmail.com",
+  "root":  "c:\\Users\\leona\\OneDrive\\Documents\\Kuliah 2025-2029\\aol-mlops\\notebooks",
+  "host":  "Alvin-Laptop",
+  "executable":  "c:\\Users\\leona\\OneDrive\\Documents\\Kuliah 2025-2029\\aol-mlops\\mlops_venv\\Scripts\\python.exe",
+  "cpu_count":  6,
+  "cpu_count_logical":  12,
+  "gpu":  "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "gpu_count":  1,
+  "disk":  {
+    "/":  {
+      "total":  "2047248166912",
+      "used":  "774337748992"
+    }
+  },
+  "memory":  {
+    "total":  "33570598912"
+  },
+  "cpu":  {
+    "model":  "AMD Ryzen 5 8645HS w/ Radeon 760M Graphics"
+  },
+  "gpu_nvidia":  [
+    {
+      "name":  "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "memoryTotal":  "8585740288",
+      "cudaCores":  3072,
+      "architecture":  "Ada",
+      "uuid":  "GPU-190d18da-3252-a9ff-0a86-3fbbab76d34c",
+      "pciBusId":  "00000000:01:00.0"
+    }
+  ],
+  "cudaVersion":  "13.1",
+  "writerId":  "01a1edb9-eedf-79c2-80fe-8a2edfa67cbd"
+}
