@@ -1,0 +1,67 @@
+_wandb:
+    value:
+        cli_version: 0.31.0
+        e:
+            01a1eda9-daaa-7d14-8461-a7bd1aa9e0ac:
+                codePath: c:\Users\leona\OneDrive\Documents\Kuliah 2025-2029\aol-mlops\notebooks\main.ipynb
+                codePathLocal: main.ipynb
+                email: alvingunawansutanto@gmail.com
+                executable: c:\Users\leona\OneDrive\Documents\Kuliah 2025-2029\aol-mlops\mlops_venv\Scripts\python.exe
+                git:
+                    commit: 29ab27ed7d6ae69b49cf31624444b3fc56f42123
+                    remote: https://github.com/RemiQant/AOL_MLOps_BE.git
+                host: Alvin-Laptop
+                os: Windows-10-10.0.26200-SP0
+                program: c:\Users\leona\OneDrive\Documents\Kuliah 2025-2029\aol-mlops\notebooks\main.ipynb
+                python: CPython 3.11.9
+                root: c:\Users\leona\OneDrive\Documents\Kuliah 2025-2029\aol-mlops\notebooks
+                startedAt: "2026-11-18T07:58:14.173742Z"
+                writerId: 01a1eda9-daaa-7d14-8461-a7bd1aa9e0ac
+        m: []
+        python_version: 3.11.9
+        t:
+            "1":
+                - 1
+                - 5
+                - 8
+                - 9
+                - 35
+                - 53
+                - 103
+                - 105
+            "2":
+                - 1
+                - 5
+                - 8
+                - 9
+                - 35
+                - 53
+                - 103
+                - 105
+            "3":
+                - 2
+                - 13
+                - 16
+            "4": 3.11.9
+            "5": 0.31.0
+            "8":
+                - 1
+                - 3
+            "10":
+                - 20
+            "12": 0.31.0
+            "13": windows-amd64
+dropout:
+    value: 0.1
+hidden_dim:
+    value: 32
+input_chunk_length:
+    value: 30
+lags:
+    value: '[1, 2, 3, 7, 14]'
+model:
+    value: lstm
+n_epochs:
+    value: 30
+test_days:
+    value: 180
