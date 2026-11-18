@@ -1,0 +1,7 @@
+[core]
+    remote = origin-s3
+['remote "origin"']
+    url = https://dagshub.com/RemiQant/AOL_MLOps_BE
+['remote "origin-s3"']
+    url = s3://dvc
+    endpointurl = https://dagshub.com/RemiQant/AOL_MLOps_BE.s3
