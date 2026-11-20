@@ -1,9 +1,9 @@
-mlops_venv
-.git
-.env
-notebooks/wandb
-notebooks/mlflow.db
-notebooks/mlruns
-**/lightning_logs
-**/darts_logs
-**/.ipynb_checkpoints
+# allowlist: hanya file yang dibutuhkan API yang masuk build context
+*
+!requirements-api.txt
+!src/
+!api/
+!data/dataset/air_quality_historical.csv
+!notebooks/models/model.joblib
+!notebooks/models/comparison.json
+**/__pycache__
