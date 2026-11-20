@@ -7,7 +7,8 @@ import pandas as pd
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.core import COMPARISON_PATH, DATA_PATH, MODEL_PATH, check_model, clean, predict_one, validate
+from src.core import (COMPARISON_PATH, DATA_PATH, MODEL_PATH, TEST_DAYS,
+                      check_model, clean, predict_one, validate)
 
 SERVED = "LightGBM + Optuna"
 app = FastAPI(title="JakartaAir Forecast API", version="1.1")
@@ -48,3 +49,14 @@ def predict(date: Date | None = None):
 @app.get("/monitoring")
 def monitoring(simulate_drift: bool = False):
     return check_model(state["data"], state["model"], state["test_mae"], simulate_drift)
+
+@app.get("/models")
+def models():
+    rows = [{"name": name, **m} for name, m in state["comparison"].items()]
+    return {"test_days": TEST_DAYS, "served": SERVED, "models": rows}
+
+
+@app.post("/reload")
+def reload():
+    load()
+    return {"status": "reloaded"}
