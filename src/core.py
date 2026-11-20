@@ -18,6 +18,8 @@ EXOG = ["pm10", "carbon_monoxide", "nitrogen_dioxide", "ozone", "aerosol_optical
 LAGS = [1, 2, 3, 4, 5, 7, 9, 14, 30]
 TEST_DAYS = 180
 WINDOW_DAYS = 30
+DRIFT_COLS = ["pm2_5", "pm10", "carbon_monoxide", "nitrogen_dioxide", "ozone"]
+MAE_RATIO_MAX, DRIFT_SHARE_MAX = 1.3, 0.5
 
 
 def clean(raw_df: pd.DataFrame) -> pd.DataFrame:
@@ -91,4 +93,33 @@ def predict_one(data: pd.DataFrame, model, date=None) -> dict:
         "error": None if actual is None else round(abs(pm25 - actual), 1),
         "category_match": None if actual is None else cat["category"] == actual_cat,
         "history": [{"date": f"{d:%Y-%m-%d}", "pm25": round(float(v), 1)} for d, v in history.items()],
+    }
+
+def check_model(data: pd.DataFrame, model, test_mae: float, simulate_drift=False) -> dict:
+    end = data["date"].max()
+    start = end - pd.Timedelta(days=WINDOW_DAYS - 1)
+    full = build_features(data).join(data.set_index("date")["pm2_5"].shift(-1).rename("y")).dropna()
+    recent = full[full.index >= start]
+    X = recent.drop(columns="y")
+    recent_mae = mean_absolute_error(recent["y"], model.predict(X) + X["pm25_today"].values)
+
+    current = data[data["date"] >= start].copy()
+    if simulate_drift:
+        current[DRIFT_COLS] *= 1.8
+    one_year = pd.Timedelta(days=365)
+    year_ago = data[data["date"].between(start - one_year, end - one_year)]
+    drift = []
+    for c in DRIFT_COLS:
+        p = float(ks_2samp(year_ago[c], current[c]).pvalue)
+        drift.append({"column": c, "p_value": round(p, 4), "drifted": p < 0.05})
+    drift_share = sum(d["drifted"] for d in drift) / len(drift)
+    mae_ratio = recent_mae / test_mae
+
+    return {
+        "checked_at": f"{end:%Y-%m-%d}", "window_days": WINDOW_DAYS,
+        "recent_mae": round(float(recent_mae), 2), "test_mae": round(float(test_mae), 2),
+        "mae_ratio": round(float(mae_ratio), 2), "drift": drift, "drift_share": drift_share,
+        "retrain_needed": bool(mae_ratio > MAE_RATIO_MAX or drift_share > DRIFT_SHARE_MAX),
+        "simulated": simulate_drift,
+        "thresholds": {"mae_ratio": MAE_RATIO_MAX, "drift_share": DRIFT_SHARE_MAX},
     }

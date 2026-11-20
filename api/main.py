@@ -7,7 +7,7 @@ import pandas as pd
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.core import COMPARISON_PATH, DATA_PATH, MODEL_PATH, clean, predict_one, validate
+from src.core import COMPARISON_PATH, DATA_PATH, MODEL_PATH, check_model, clean, predict_one, validate
 
 SERVED = "LightGBM + Optuna"
 app = FastAPI(title="JakartaAir Forecast API", version="1.1")
@@ -44,3 +44,7 @@ def predict(date: Date | None = None):
         return predict_one(state["data"], state["model"], date)
     except ValueError as e:
         raise HTTPException(400, str(e))
+
+@app.get("/monitoring")
+def monitoring(simulate_drift: bool = False):
+    return check_model(state["data"], state["model"], state["test_mae"], simulate_drift)
