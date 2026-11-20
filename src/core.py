@@ -17,6 +17,7 @@ BAD_DATES = ["2022-12-14", "2022-12-15"]
 EXOG = ["pm10", "carbon_monoxide", "nitrogen_dioxide", "ozone", "aerosol_optical_depth"]
 LAGS = [1, 2, 3, 4, 5, 7, 9, 14, 30]
 TEST_DAYS = 180
+WINDOW_DAYS = 30
 
 
 def clean(raw_df: pd.DataFrame) -> pd.DataFrame:
@@ -50,3 +51,44 @@ def build_features(data: pd.DataFrame) -> pd.DataFrame:
     X["month_cos"] = np.cos(2 * np.pi * X.index.month / 12)
     X["dayofweek"] = X.index.dayofweek
     return X
+
+# ---------- ISPU ----------
+ISPU = [  # (batas atas, kategori, warna, saran) — PermenLHK P.14/2020
+    (15.5, "Baik", "#16A34A", "Kualitas udara baik, aman untuk aktivitas luar ruangan."),
+    (55.4, "Sedang", "#2563EB", "Kelompok sensitif sebaiknya mengurangi aktivitas berat di luar ruangan."),
+    (150.4, "Tidak Sehat", "#EAB308", "Kurangi aktivitas luar ruangan dan gunakan masker."),
+    (250.4, "Sangat Tidak Sehat", "#DC2626", "Hindari aktivitas luar ruangan, gunakan masker N95."),
+    (float("inf"), "Berbahaya", "#111827", "Tetap di dalam ruangan dan tutup jendela."),
+]
+
+
+def ispu(pm25: float) -> dict:
+    for upper, category, color, advice in ISPU:
+        if pm25 <= upper:
+            return {"category": category, "color": color, "advice": advice}
+
+
+# ---------- Serving ----------
+def predict_one(data: pd.DataFrame, model, date=None) -> dict:
+    s = data.set_index("date")["pm2_5"]
+    X_all = build_features(data).dropna()  # buang 30 hari awal yang lag-nya belum lengkap
+    date = X_all.index.max() if date is None else pd.Timestamp(date)
+    if date not in X_all.index:
+        raise ValueError(f"Tanggal harus antara {X_all.index.min():%Y-%m-%d} dan {X_all.index.max():%Y-%m-%d}")
+
+    X = X_all.loc[[date]]
+    pm25 = float(model.predict(X)[0] + X["pm25_today"].iloc[0])  # model memprediksi selisih
+    target = date + pd.Timedelta(days=1)
+    actual = float(s[target]) if target in s.index else None
+    actual_cat = ispu(actual)["category"] if actual is not None else None
+    cat = ispu(pm25)
+    history = s.loc[date - pd.Timedelta(days=WINDOW_DAYS - 1): date]
+
+    return {
+        "date": f"{date:%Y-%m-%d}", "target_date": f"{target:%Y-%m-%d}",
+        "today_pm25": round(float(s[date]), 1), "pm25": round(pm25, 1), **cat,
+        "actual": None if actual is None else round(actual, 1), "actual_category": actual_cat,
+        "error": None if actual is None else round(abs(pm25 - actual), 1),
+        "category_match": None if actual is None else cat["category"] == actual_cat,
+        "history": [{"date": f"{d:%Y-%m-%d}", "pm25": round(float(v), 1)} for d, v in history.items()],
+    }
