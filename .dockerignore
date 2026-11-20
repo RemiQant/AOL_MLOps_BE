@@ -1,0 +1,9 @@
+mlops_venv
+.git
+.env
+notebooks/wandb
+notebooks/mlflow.db
+notebooks/mlruns
+**/lightning_logs
+**/darts_logs
+**/.ipynb_checkpoints
